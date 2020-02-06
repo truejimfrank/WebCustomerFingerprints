@@ -120,11 +120,15 @@ def agg_func(row):
 
 def add_3_more_columns(df):
     """ rename column {"itemid":"product_count"}
-    adding time delta columns and made_purchase y target"""
+    adding time delta columns and made_purchase y target
+    drop some columns for clarity
+    """
     df.rename(columns={"itemid":"product_count"}, inplace=True)
     df = df.assign(time_delta=lambda x: x.timestamp - x.mintimestamp)
     df = df.assign(time_hour=lambda x: x.time_delta / np.timedelta64(1, 'h'))
     df = df.assign(made_purchase=lambda x: np.uint8(x.transaction > 0))
+    droplist = ['index', 'event', 'mintimestamp']
+    df.drop(columns=droplist, inplace=True)   
     return df
 
 def save_pickle(df, filepath):
@@ -148,9 +152,21 @@ if __name__ == '__main__':
     dftagg = dftoy.groupby('visitorid').agg(agg_func)
     print("finished the main aggregation")
     dftagg = add_3_more_columns(dftagg)
-    print("final columns added")
+    print("final columns added & dropped")
     toy_pickle_filepath = '../../data/ecommerce/dftoy_script.pkl'
     save_pickle(dftagg, toy_pickle_filepath)
+
+# make the real dataframe and pickle save it
+    print("starting the real dataframe functions")
+    dfevents = onehot_the_df(dfevents)
+    print("onehot columns added")
+    print("starting main groupby aggregation")
+    dfgroup = dfevents.groupby('visitorid').agg(agg_func)
+    print("finished the main aggregation")
+    dfgroup = add_3_more_columns(dfgroup)
+    print("final columns added & dropped")
+    real_pickle_filepath = '../../data/ecommerce/dfmodel_script.pkl'
+    save_pickle(dfgroup, real_pickle_filepath)
 
 
 
