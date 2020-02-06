@@ -29,6 +29,13 @@ def time_format(df):
         times.append(datetime.datetime.fromtimestamp(i//1000.0))
     df['timestamp']=times
 
+def toy_dataframe(df):
+    """makes trial dataframe with two users with 'transactions'"""
+    mask1 = df['visitorid'] == 1155978
+    mask2 = df['visitorid'] == 539
+    # selector = mask1 | mask2
+    return df.loc[mask1 | mask2]
+
 def event_counts(df):
     """
     OBSOLETE : DOESN'T WORK
@@ -82,28 +89,47 @@ def another_counter(df):
         df.loc[id_mask, ['add_count']] = add
         df.loc[id_mask, ['purchase_count']] = purchase
 
-def onehot_the_df():
-    pass
+def onehot_the_df(df):
+    """ add columns addtocart, transaction, view in this order
+    also adds copied timestamp column for time_delta comlumns later on
+    """
+    df = df.assign(mintimestamp=lambda x: x.timestamp)
+    enc = OneHotEncoder(sparse=False, dtype=np.uint8)
+    X = df['event'].values.reshape(-1, 1)
+    enc.fit(X)
+    X = enc.transform(X)
+    dfonehot = pd.DataFrame(X, columns=enc.categories_[0])
+    return pd.concat([df.reset_index(), dfonehot], axis=1)
 
 def agg_func(row):
     """
     function for agging events onehot df
-    columns: 8 after onehot (subtracting 1 for visitorid to index)
+    columns: 9 after onehot (subtracting 1 for visitorid to index)
     """
     # c0, c1, c2, c3, c4, c5, c6, c7 = [0,0,0,0,0,0,0,0]
     c0 = row['index']
-    c1 = row['timestamp']
+    c1 = np.max(row['timestamp']) # preparing for time_delta assign
     c2 = row['event']
     c3 = np.unique(row['itemid']).shape[0] # number of items acted on
-    c4 = np.max(row['transactionid'])
+    c4 = np.max(row['transactionid']) # pulls an id if there is one
+    c45 = np.min(row['mintimestamp']) # preparing for time_delta assign
     c5 = np.sum(row['addtocart'])
     c6 = np.sum(row['transaction'])
     c7 = np.sum(row['view'])
-    return c0, c1, c2, c3, c4, c5, c6, c7
+    return c0, c1, c2, c3, c4, c45, c5, c6, c7
 
-def add_3_more_columns():
-    pass
+def add_3_more_columns(df):
+    """ rename column {"itemid":"product_count"}
+    adding time delta columns and made_purchase y target"""
+    df.rename(columns={"itemid":"product_count"}, inplace=True)
+    df = df.assign(time_delta=lambda x: x.timestamp - x.mintimestamp)
+    df = df.assign(time_hour=lambda x: x.time_delta / np.timedelta64(1, 'h'))
+    df = df.assign(made_purchase=lambda x: np.uint8(x.transaction > 0))
+    return df
 
+def save_pickle(df, filepath):
+    df.to_pickle(filepath, compression='zip')
+    print("pickel saved! to:" + filepath)
 
 
 if __name__ == '__main__':
@@ -112,5 +138,19 @@ if __name__ == '__main__':
     print("completed file load function")
     time_format(dfevents)
     print("timestamp column formatted")
+
+# make toydf and run functions on it
+    dftoy = toy_dataframe(dfevents)
+    print("made toy dataframe")
+    dftoy = onehot_the_df(dftoy)
+    print("onehot columns added")
+    print("starting main groupby aggregation")
+    dftagg = dftoy.groupby('visitorid').agg(agg_func)
+    print("finished the main aggregation")
+    dftagg = add_3_more_columns(dftagg)
+    print("final columns added")
+    toy_pickle_filepath = '../../data/ecommerce/dftoy_script.pkl'
+    save_pickle(dftagg, toy_pickle_filepath)
+
 
 
