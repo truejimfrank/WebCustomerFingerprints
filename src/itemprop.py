@@ -1,6 +1,14 @@
 import pandas as pd
 import numpy as np
 
+"""
+load and merge product category files
+outputs compressed pickle dataframes
+1) product ID with associated category
+2) unique product ID's from these category files
+note: There are significantly less unique products in the events.csv
+"""
+
 items1=pd.read_csv('../data/ecommerce/item_properties_part1.csv')
 items2=pd.read_csv('../data/ecommerce/item_properties_part2.csv')
 print(items2.info())
