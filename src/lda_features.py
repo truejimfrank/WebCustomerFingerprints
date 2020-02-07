@@ -11,6 +11,12 @@ from gensim.models import LdaMulticore
 def run_gensim_lda(dfcluster, num_cluster=8):
     """ runs gensim LDA
     returns the trained LDA model & bow_corpus
+     --- options for gensim LDA ---
+    class gensim.models.ldamulticore.LdaMulticore(corpus=None, num_topics=100, 
+    id2word=None, workers=None, chunksize=2000, passes=1, batch=False, alpha='symmetric', 
+    eta=None, decay=0.5, offset=1.0, eval_every=10, iterations=50, 
+    gamma_threshold=0.001, random_state=None, minimum_probability=0.01, 
+    minimum_phi_value=0.01, per_word_topics=False, dtype=<class 'numpy.float32'>)
     """
     gensim_processed = dfcluster['product_list']
     # create dictionary
@@ -21,8 +27,8 @@ def run_gensim_lda(dfcluster, num_cluster=8):
     bow_corpus = [id2word.doc2bow(text) for text in gensim_processed]
     print(f"number clusters option set at {num_cluster}")
     print("running LdaMulticore. this will take a minute or two")
-    lda_model = LdaMulticore(bow_corpus, num_topics=num_cluster, 
-                            id2word=id2word, passes=2, workers=3, random_state=9)
+    lda_model = LdaMulticore(bow_corpus, num_topics=num_cluster, id2word=id2word, 
+                            passes=2, iterations=50, workers=3, random_state=9)
     return lda_model, bow_corpus
     
 def print_lda(lda_model, bow_corpus):
@@ -51,7 +57,7 @@ if __name__ == '__main__':
 
     dfmodel = pd.read_pickle('../../data/ecommerce/dfmodel_script.pkl', compression='zip')
     dfevents, dfcluster = load_files() # dfcluster is 380K
-    
+
     print("files are loaded. starting gensim lda")
     lda_model, bow_corpus = run_gensim_lda(dfcluster, num_cluster=8)
     print("LDA model complete\nstarting make join probs df")

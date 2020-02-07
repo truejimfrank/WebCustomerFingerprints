@@ -142,6 +142,10 @@ Predictions are doing reasonably well for how unsophisticated this model is. Esp
 
 The added features are uniformly ineffective.
 
+![user product hist](https://github.com/truejimfrank/WebCustomerFingerprints/blob/master/img/LDA_feat_hist.png)
+
+<sub><b>Figure: </b> LDA Probability Histogram </sub>
+
 ## Conclusion
 
-Today we've only had time for one cluster model paired with one regression classifier. Thankfully, there are many other algorithymic options to choose from in the data science toolbelt.
+Today we've only had time for one cluster model paired with one regression classifier. Thankfully, there are other paths of investigation to choose from in the data science toolbelt.
