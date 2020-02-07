@@ -1,11 +1,10 @@
 # Web Customer Fingerprints
 
-### _LDA customer clustering_
-### _and future purchase prediction_  
+### _LDA customer clustering & future purchase prediction_  
 
 _(LDA : latent dirichlet allocation)_  
 A data science adventure by Jim Frank  
-_E-commerce website data from  [Kaggle: Retailrocket recommender system dataset](https://www.kaggle.com/retailrocket/ecommerce-dataset) ._
+_E-commerce website data from  [Retailrocket recommender system dataset](https://www.kaggle.com/retailrocket/ecommerce-dataset) ._
 
 ---
 
@@ -42,7 +41,7 @@ The data has been collected from a real-world ecommerce website. It is raw data,
 
 ### Content
 
-Behaviour data consists of 3 event types. Those being views, add to carts, and transactions. These product interactions were collected over a period of 4.5 months in 2015.
+Behaviour data consists of 3 event types. Those being **views, add to carts, and transactions.** These product interactions were collected over a period of 4.5 months in 2015.
 
 Here's an example of the raw data:
 
@@ -53,11 +52,12 @@ Here's an example of the raw data:
 
 ## EDA And Data Wrangling
 
+* <b>1,407,580</b> unique visitors  
 * <b>2,756,101</b> total events  
 * <b>2,664,312</b> views  
 * <b>69,332</b> add to carts  
 * <b>22,457</b> transactions  
-* <b>1,407,580</b> unique visitors 
+* <b>0.81%</b> events that are transactions  
 
 The data required filtering to be useable for LDA clustering.
 
@@ -74,25 +74,26 @@ Using this criteria yields ample quality data.
 
 ## LDA Customer Product Clustering
 
-When customers view and purchase products from a particular category of product, they create the ties that LDA finds and groups together. As we are finding customer fingerprints, first lets group our customers and products into 10 groups.
+When customers view and purchase products from a particular category of product, they create the ties that LDA finds and groups together. As we are finding customer fingerprints, first lets group our customers and products into 10 groups. Multi-dimensional scaling is done with Jensen-Shannon distance.
 
 ![lda10](https://github.com/truejimfrank/WebCustomerFingerprints/blob/master/img/cat10_ldavis.png)
 
-<sub><b>Figure: </b> 10 cluster LDA visualization </sub>
+<sub><b>Figure: </b> 10 cluster LDA visualization [interactive visualization link](https://github.com/truejimfrank/WebCustomerFingerprints/blob/master/notebooks/cat10_lda.html)</sub>
+
 
 ![lda10score](https://github.com/truejimfrank/WebCustomerFingerprints/blob/master/img/cat10_scores.png)
 
-<sub><b>Figure: </b> 10 cluster LDA score. Lower perplexity is better. </sub>
+<sub><b></b> 10 cluster LDA score. Lower perplexity is better. </sub>
 
 In the 2-dimension representation of multi-dimensional space, you can see that 3 of the topics group closely to one another. Perhaps two of the groups are redundant. Let's group to 8 clusters and take a look.
 
 ![lda8](https://github.com/truejimfrank/WebCustomerFingerprints/blob/master/img/cat8_ldavis.png)
 
-<sub><b>Figure: </b> 8 cluster LDA visualization </sub>
+<sub><b>Figure: </b> 8 cluster LDA visualization [interactive visualization link](https://github.com/truejimfrank/WebCustomerFingerprints/blob/master/notebooks/cat8_lda.html)</sub>
 
 ![lda8score](https://github.com/truejimfrank/WebCustomerFingerprints/blob/master/img/cat8_scores.png)
 
-<sub><b>Figure: </b> 8 cluster LDA score. Lower perplexity is better. </sub>
+<sub><b></b> 8 cluster LDA score. Lower perplexity is better. </sub>
 
 I like the look of this. Quality separation in multi-dimensional space. The anonymized product ID's just means we'll have to improve our logistic prediction to prove the worth of this LDA clustering.
 
@@ -104,4 +105,6 @@ Here are the terms of our prediction: With a logistic regression, predict True/F
 |--|--|--|--|
 | integer | integer | integer | float |
 
-<sub><b>Table: </b> Features used for basic logistic regression. </sub>
+<sub><b>Table: </b> Customer features used for basic logistic regression. </sub>
+
+
