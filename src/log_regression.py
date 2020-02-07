@@ -15,6 +15,7 @@ from sklearn.metrics import classification_report # (y_test, y_pred)
 from sklearn.metrics import confusion_matrix # (y_test, y_pred)
 
 from pickle_process import load_files
+import lda_features
 
 def sort_split(df):
     """ return holdout, crossval, tank
@@ -91,12 +92,7 @@ def run_log_test(X, y, logit_results, thresh=0.5):
     print(confusion_matrix(y, y_pred))
     print("accuracy ", round(accuracy_score(y, y_pred), 3))
 
-
-if __name__ == '__main__':
-
-    dfmodel = pd.read_pickle('../../data/ecommerce/dfmodel_script.pkl', compression='zip')
-    dfevents, dfcluster = load_files()
-    print("dfmodel and dfcluster loaded")
+def run_basic_logit():
     print("start df sort split function")
     holdout, crossval, tank = sort_split(dfmodel)
     Xcross, ycross = df_to_xy_standardized(crossval)
@@ -104,6 +100,36 @@ if __name__ == '__main__':
     print("run log model")
     trained_model = run_log_train(Xcross, ycross)
     run_log_test(Xhold, yhold, trained_model)
+    print("fin basic logit")
+
+if __name__ == '__main__':
+
+    dfmodel = pd.read_pickle('../../data/ecommerce/dfmodel_script.pkl', compression='zip')
+    dfevents, dfcluster = load_files()
+    print("dfmodel and dfcluster loaded")
+
+    # run_basic_logit()
+
+# run LDA model functions
+    print("starting gensim LDA")
+    lda_model, bow_corpus = lda_features.run_gensim_lda(dfcluster, num_cluster=8)
+    print("LDA model complete\nstarting make join probs df")
+    dfmodel = lda_features.make_join_probs_df(dfmodel, lda_model, 
+                                bow_corpus, num_cluster=8)
+    print("join complete\nsaving pickle")
+    dfmodel.to_pickle('../../data/ecommerce/LDA_dfmodel.pkl', compression='zip')
+
+# modify dfmodel for LDA logit
+    print("start df sort split function")
+    holdout, crossval, tank = sort_split(dfmodel)
+    Xcross, ycross = df_to_xy_standardized(crossval)
+    Xhold, yhold = df_to_xy_standardized(holdout)
+    print("run log model")
+    trained_model = run_log_train(Xcross, ycross)
+    run_log_test(Xhold, yhold, trained_model)
+    print("fin basic logit")
+
+
 
 
 

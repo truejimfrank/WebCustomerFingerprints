@@ -78,7 +78,7 @@ When customers view and purchase products from a particular category of product,
 
 ![lda10](https://github.com/truejimfrank/WebCustomerFingerprints/blob/master/img/cat10_ldavis.png)
 
-<sub><b>Figure: </b> 10 cluster LDA visualization [interactive visualization link](https://github.com/truejimfrank/WebCustomerFingerprints/blob/master/notebooks/cat10_lda.html)</sub>
+<sub><b>Figure: </b> 10 cluster LDA visualization </sub>
 
 
 ![lda10score](https://github.com/truejimfrank/WebCustomerFingerprints/blob/master/img/cat10_scores.png)
@@ -89,7 +89,7 @@ In the 2-dimension representation of multi-dimensional space, you can see that 3
 
 ![lda8](https://github.com/truejimfrank/WebCustomerFingerprints/blob/master/img/cat8_ldavis.png)
 
-<sub><b>Figure: </b> 8 cluster LDA visualization [interactive visualization link](https://github.com/truejimfrank/WebCustomerFingerprints/blob/master/notebooks/cat8_lda.html)</sub>
+<sub><b>Figure: </b> 8 cluster LDA visualization </sub>
 
 ![lda8score](https://github.com/truejimfrank/WebCustomerFingerprints/blob/master/img/cat8_scores.png)
 
@@ -106,5 +106,30 @@ Here are the terms of our prediction: With a logistic regression, predict True/F
 | integer | integer | integer | float |
 
 <sub><b>Table: </b> Customer features used for basic logistic regression. </sub>
+
+Data was appropriately sorted, split, and standardized before training the logistic regression predictor.
+
+| X1 | X2 | X3 | X4 |
+|--|--|--|--|
+| 0.87 | 77.48 | 1.32 | 1.02 |
+
+<sub><b>Table: </b> Feature coeffs contributing to odds for purchase </sub>
+
+| 0.928 acc |  | predicted yes |
+|--|--|--|
+|  | 95923 | 7118 |
+| actual yes | 1122 | 11077 |
+
+<sub><b>Table: </b> Train confusion matrix </sub>
+
+| 0.925 acc |  | predicted yes |
+|--|--|--|
+|  | 23974 | 1786 |
+| actual yes | 795 | 7792 |
+
+<sub><b>Table: </b> Test confusion matrix </sub>
+
+Predictions are doing reasonably well for how unsophisticated this model is. Especially considering that it is predicting mainly from one feature, addtocart.
+
 
 
