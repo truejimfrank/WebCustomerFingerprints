@@ -144,4 +144,4 @@ The added features are uniformly ineffective.
 
 ## Conclusion
 
-Today we've only had time for one cluster model paired with one regression classifier. Thankfully, there are many other algorithymic options to choose from in the data science toolbelt.
+Today we've only had time for one cluster model paired with one regression classifier. Thankfully, there are other paths of investigation to choose from in the data science toolbelt.
