@@ -20,7 +20,7 @@ def load_files():
     clustermask = dfevents['visitorid'].isin(clusterlist)
     dfevents = dfevents.loc[clustermask]
     print("events dataframe shape after product filtering\t", dfevents.shape)
-    return dfevents
+    return dfevents, dfcluster
 
 def time_format(df):
     """formats the timestamp column inplace"""
@@ -138,7 +138,7 @@ def save_pickle(df, filepath):
 
 if __name__ == '__main__':
 
-    dfevents = load_files()
+    dfevents, dfcluster = load_files()
     print("completed file load function")
     time_format(dfevents)
     print("timestamp column formatted")
@@ -156,7 +156,7 @@ if __name__ == '__main__':
     toy_pickle_filepath = '../../data/ecommerce/dftoy_script.pkl'
     save_pickle(dftagg, toy_pickle_filepath)
 
-# make the real dataframe and pickle save it
+# make the real dataframe and pickle save it (takes 6 minutes)
     print("starting the real dataframe functions")
     dfevents = onehot_the_df(dfevents)
     print("onehot columns added")
