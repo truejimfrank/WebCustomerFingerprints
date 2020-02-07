@@ -68,9 +68,9 @@ Using this criteria yields ample quality data.
 * <b>235,061</b> unique products
 * <b>1,587,292</b> events
 
-![user product hist](https://github.com/truejimfrank/WebCustomerFingerprints/blob/master/img/cat10_ldavis.png)
+![user product hist](https://github.com/truejimfrank/WebCustomerFingerprints/blob/master/img/product_hist.png)
 
-<sub><b>Figure: </b> Visitor counts binned by # products interacted with </sub>
+<sub><b>Figure: </b> Visitor counts binned on # products interacted with </sub>
 
 ## LDA Customer Product Clustering
 
