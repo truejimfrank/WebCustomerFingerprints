@@ -137,6 +137,7 @@ Predictions are doing reasonably well for how unsophisticated this model is. Esp
 |--|--|--|--|--|--|--|--|--|--|--|--|
 | 0.91 | 76.14 | 1.21 | 1.02 | 0.11 | 0.10 | 0.10 | 0.10 | 0.10 | 0.10 | 0.10 | 0.10 |
 | product_count | addtocart | view | time_hour |
+
 <sub><b>Table: </b> Feature coeffs contributing to odds for purchase </sub>
 
 The added features are uniformly ineffective.
