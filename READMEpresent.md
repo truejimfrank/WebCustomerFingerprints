@@ -131,5 +131,16 @@ Data was appropriately sorted, split, and standardized before training the logis
 
 Predictions are doing reasonably well for how unsophisticated this model is. Especially considering that it is predicting mainly from one feature, addtocart.
 
+### Adding LDA Features
 
+| X1 | X2 | X3 | X4 | X5 | X6 | X7 | X8 | X9 | X10 | X11 | X12 |
+|--|--|--|--|--|--|--|--|--|--|--|--|
+| 0.91 | 76.14 | 1.21 | 1.02 | 0.11 | 0.10 | 0.10 | 0.10 | 0.10 | 0.10 | 0.10 | 0.10 |
+| product_count | addtocart | view | time_hour |
+<sub><b>Table: </b> Feature coeffs contributing to odds for purchase </sub>
 
+The added features are uniformly ineffective.
+
+## Conclusion
+
+Today we've only had time for one cluster model paired with one regression classifier. Thankfully, there are many other algorithymic options to choose from in the data science toolbelt.

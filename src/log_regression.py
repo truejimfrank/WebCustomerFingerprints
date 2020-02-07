@@ -49,13 +49,16 @@ def sort_split(df):
     crossval = crossappended.sample(frac=1., random_state=intforrand)
     return holdout, crossval, dftank
 
-col_all = ['product_count', 'addtocart', 'view', 'time_hour']
+col_basic = ['product_count', 'addtocart', 'view', 'time_hour']
+col_lda = ['product_count', 'addtocart', 'view', 'time_hour', 0,1,2,3,4,5,6,7]
+col_listlist = [col_basic, col_lda]
 
 def df_to_xy_constant(df):
     pass
 
-def df_to_xy_standardized(df):
-    X = df[col_all].to_numpy()
+def df_to_xy_standardized(df, lda_trigger=0):
+    # lda_trigger 0 is basic, 1 is LDA
+    X = df[col_listlist[lda_trigger]].to_numpy()
     y = df['made_purchase'].to_numpy().reshape(-1,1)
     scaler = StandardScaler().fit(X)
     Xstan = scaler.transform(X)
@@ -102,15 +105,8 @@ def run_basic_logit():
     run_log_test(Xhold, yhold, trained_model)
     print("fin basic logit")
 
-if __name__ == '__main__':
-
-    dfmodel = pd.read_pickle('../../data/ecommerce/dfmodel_script.pkl', compression='zip')
-    dfevents, dfcluster = load_files()
-    print("dfmodel and dfcluster loaded")
-
-    # run_basic_logit()
-
-# run LDA model functions
+def run_lda_make_df():
+    # run LDA model functions. Takes 30 minutes!!!!
     print("starting gensim LDA")
     lda_model, bow_corpus = lda_features.run_gensim_lda(dfcluster, num_cluster=8)
     print("LDA model complete\nstarting make join probs df")
@@ -119,19 +115,26 @@ if __name__ == '__main__':
     print("join complete\nsaving pickle")
     dfmodel.to_pickle('../../data/ecommerce/LDA_dfmodel.pkl', compression='zip')
 
+
+if __name__ == '__main__':
+
+    # dfmodel = pd.read_pickle('../../data/ecommerce/dfmodel_script.pkl', compression='zip')
+    # dfevents, dfcluster = load_files()
+    # print("dfmodel and dfcluster loaded")
+
+    # run_basic_logit()
+
+    dflda = pd.read_pickle('../../data/ecommerce/LDA_dfmodel.pkl', compression='zip')
+    print("dflda loaded")
+
 # modify dfmodel for LDA logit
     print("start df sort split function")
-    holdout, crossval, tank = sort_split(dfmodel)
-    Xcross, ycross = df_to_xy_standardized(crossval)
-    Xhold, yhold = df_to_xy_standardized(holdout)
+    holdout, crossval, tank = sort_split(dflda)
+    Xcross, ycross = df_to_xy_standardized(crossval, 1) # change here
+    Xhold, yhold = df_to_xy_standardized(holdout, 1)
     print("run log model")
     trained_model = run_log_train(Xcross, ycross)
     run_log_test(Xhold, yhold, trained_model)
     print("fin basic logit")
 
 
-
-
-
-    
-    
